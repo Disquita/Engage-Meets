@@ -1,0 +1,17 @@
+body {
+    background:url(./background.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    color: grey;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.bigheading {
+    color: black;
+    background: gray;
+}
