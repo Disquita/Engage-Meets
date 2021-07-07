@@ -1,4 +1,7 @@
-﻿## Engage-Meets
+﻿[![Netlify Status](https://api.netlify.com/api/v1/badges/139f955f-e9f9-4c32-991a-3d8227346718/deploy-status)](https://app.netlify.com/sites/engage-meets/deploys)
+ [![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)](https://engage-meets.herokuapp.com/)
+
+ ## Engage-Meets
  
  A WebRTC based Videocalling App created using ReactJS and NodeJS. 
  This was built as part of the Microsoft Engage 2021 Program.
