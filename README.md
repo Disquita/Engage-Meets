@@ -5,6 +5,7 @@
  
  ## App User Interface
  
+ ![screenshot](Screenshots/screenshot1.png)
  
  ## Features and Functionalities
  
