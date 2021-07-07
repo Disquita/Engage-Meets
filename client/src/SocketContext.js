@@ -19,6 +19,8 @@ const ContextProvider = ({ children }) => {
     const [myMicStatus, setMyMicStatus] = useState(true);
     const [userMicStatus, setUserMicStatus] = useState();
     const [myScreen, setMyScreen] = useState(true);
+    const [chat, setChat] = useState([]);
+    const [msgRcv, setMsgRcv] = useState("");
     var ss;
     const myVideo = useRef();
     const userVideo = useRef();
@@ -52,6 +54,13 @@ const ContextProvider = ({ children }) => {
               break;
           }
         }
+      });
+
+      socket.on("msgRcv", ({ name, msg: value, sender }) => {
+        setMsgRcv({ value, sender });
+        setTimeout(() => {
+          setMsgRcv({});
+        }, 2000);
       });
 
 }, []);
@@ -142,6 +151,16 @@ const ContextProvider = ({ children }) => {
     }
   };
 
+  const sendMsg = (value) => {
+    socket.emit("messageUser", { name, to: call.from, msg: value, sender: name });
+    let msg = {};
+    msg.msg = value;
+    msg.type = "sent";
+    msg.timestamp = Date.now();
+    msg.sender = name;
+    setChat([...chat, msg]);
+  };
+
   const leaveCall = () => {
       setCallEnded(true);
       connectionRef.current.destroy();
@@ -172,6 +191,11 @@ const ContextProvider = ({ children }) => {
         updateMic,
         shareScreen,
         myScreen,
+        sendMsg,
+        msgRcv,
+        chat,
+        setChat,
+        setMsgRcv,
       }}>
         {children}
       </SocketContext.Provider>

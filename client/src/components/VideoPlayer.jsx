@@ -10,6 +10,7 @@ import VideocamIcon from '@material-ui/icons/Videocam';
 import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 import ScreenShareIcon from '@material-ui/icons/ScreenShare';
 import StopScreenShareIcon from '@material-ui/icons/StopScreenShare';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
   ButtonGroup: {
     background: 'violet',
+    justifyContent: 'center',
   },
 
 }));
@@ -58,6 +60,20 @@ const VideoPlayer = () => {
       shareScreen,
       myScreen } = useContext(SocketContext);
     const classes = useStyles();
+    const toggleFullScreen = () => {
+      if(!callAccepted)
+       return;
+      var v = document.getElementById("usVideo");
+      if (v.requestFullscreen) {
+        v.requestFullscreen();
+      } else if (v.msRequestFullscreen) {
+        v.msRequestFullscreen();
+      } else if (v.mozRequestFullScreen) {
+        v.mozRequestFullScreen();
+      } else if (v.webkitRequestFullscreen) {
+        v.webkitRequestFullscreen();
+      }
+    };
     return (
       <div className={classes.root}>
           <Grid container className={classes.gridContainer}>
@@ -78,15 +94,16 @@ const VideoPlayer = () => {
                       <Grid item xs={12} md={6}>
                       {console.log(call.name)}
                           <Typography variant="h4" background_color="red" gutterBottom>{call.name || 'Caller Name'}</Typography>
-                          <video playsInline id="usVideo" ref={userVideo} autoPlay className={classes.video} controls/>
+                          <video playsInline id="usVideo" ref={userVideo} autoPlay className={classes.video} />
                       </Grid>
                       </Paper>
           )}
           </Grid>
-            <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group" className={classes.buttons}>
+            <ButtonGroup class="btn-toolbar" variant="contained" color="primary" aria-label="contained primary button group" className={classes.buttons}>
               <Button startIcon={myMicStatus ?<MicIcon />:<MicOffIcon />} onClick={() => updateMic()}>{myMicStatus ?<span>Mute</span>:<span>Unmute</span>}</Button>
               <Button startIcon={myVdoStatus ?<VideocamIcon />:<VideocamOffIcon />} onClick={() => updateVideo()}>{myVdoStatus ?<span>Turn off Video</span>:<span>Turn on Video</span>}</Button>
               <Button startIcon={myScreen ?<ScreenShareIcon />:<StopScreenShareIcon />} onClick={() => shareScreen()}>{myScreen ?<span>Share Screen</span>:<span>Stop Sharing Screen</span>}</Button>
+              <Button startIcon={<FullscreenIcon />} onClick={() => toggleFullScreen()}>Fullscreen</Button>
             </ButtonGroup>
           </div>
     );
