@@ -19,5 +19,6 @@
  5. Camera disable/enable
  6. Screen Sharing
  7. Fullscreen option
+ 8. Directly Share ID and link through social media
  
  
