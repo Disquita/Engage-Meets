@@ -11,7 +11,7 @@ import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 import ScreenShareIcon from '@material-ui/icons/ScreenShare';
 import StopScreenShareIcon from '@material-ui/icons/StopScreenShare';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
-
+import ChatIcon from '@material-ui/icons/Chat';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -107,6 +107,7 @@ const VideoPlayer = () => {
               <Button startIcon={myScreen ?<ScreenShareIcon />:<StopScreenShareIcon />} onClick={() => shareScreen()}>{myScreen ?<span>Share Screen</span>:<span>Stop Sharing Screen</span>}</Button>
               <Button startIcon={<FullscreenIcon />} onClick={() => toggleFullScreen()}>Fullscreen</Button>
             </ButtonGroup>
+            <Button variant="contained" color="primary" startIcon={<ChatIcon />} className={classes.buttons} onClick={() => toggleFullScreen()}>Chat</Button>
           </div>
     );
 };

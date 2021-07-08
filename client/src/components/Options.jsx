@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
     shares: {
+      padding: '20px 20px',
       display: 'flex',
       justifyContent: 'center',
     },
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
    }));
 
 const Options = ( {children} ) => {
-    const { me, callAccepted, name, setName, callEnded, leaveCall, callUser } = useContext(SocketContext);
+    const { me, callAccepted, name, setName, callEnded, leaveCall, callUser, calling } = useContext(SocketContext);
     const [idToCall, setIdToCall] = useState('');
     const classes = useStyles();
     const [isCopied, setIsCopied] = useState(false);
@@ -98,6 +99,7 @@ const Options = ( {children} ) => {
                               End Call
                             </Button>
                           ) : (
+                            <div>
                             <Button variant="contained" 
                             color="primary" 
                             startIcon={<Phone fontSize="large" />} 
@@ -106,6 +108,8 @@ const Options = ( {children} ) => {
                             className={classes.margin}>
                               Enter Call
                             </Button>
+                            {calling?<span> Calling </span>:<span></span>}
+                            </div>
                           )}
                     </Grid>
                 </Grid>    

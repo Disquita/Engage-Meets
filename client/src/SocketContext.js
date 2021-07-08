@@ -23,6 +23,7 @@ const ContextProvider = ({ children }) => {
     const [chat, setChat] = useState([]);
     const [msgRcv, setMsgRcv] = useState("");
     const [uname, setUname] = useState("");
+    const [calling, setCalling] = useState(false);
     var ss;
     const myVideo = useRef();
     const userVideo = useRef();
@@ -86,7 +87,7 @@ const ContextProvider = ({ children }) => {
 
   const callUser = (id) => {
     const peer = new Peer({ initiator: true, trickle: false, stream });
-
+      setCalling(true);
       peer.on('signal', (data) => {
         socket.emit('callUser', { userToCall: id, signalData : data, from: me, name });
       });
@@ -96,6 +97,7 @@ const ContextProvider = ({ children }) => {
       });
 
       socket.on('callAccepted', ({signal, uname}) => {
+          setCalling(false);
           setCallAccepted(true);
           setUname(uname);
           peer.signal(signal);
@@ -200,6 +202,7 @@ const ContextProvider = ({ children }) => {
         setChat,
         setMsgRcv,
         uname,
+        calling,
       }}>
         {children}
       </SocketContext.Provider>
