@@ -12,6 +12,7 @@ import ScreenShareIcon from '@material-ui/icons/ScreenShare';
 import StopScreenShareIcon from '@material-ui/icons/StopScreenShare';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
+
 const useStyles = makeStyles((theme) => ({
 
     root: {
@@ -98,6 +99,7 @@ const VideoPlayer = () => {
                       </Grid>
                       </Paper>
           )}
+          
           </Grid>
             <ButtonGroup class="btn-toolbar" variant="contained" color="primary" aria-label="contained primary button group" className={classes.buttons}>
               <Button startIcon={myMicStatus ?<MicIcon />:<MicOffIcon />} onClick={() => updateMic()}>{myMicStatus ?<span>Mute</span>:<span>Unmute</span>}</Button>

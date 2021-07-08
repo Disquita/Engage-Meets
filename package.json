@@ -18,6 +18,7 @@
     "express": "^4.17.1",
     "react-copy-to-clipboard": "^5.0.3",
     "react-modal": "^3.14.3",
+    "react-share": "^4.4.0",
     "serve": "^11.3.2",
     "simple-peer": "^9.11.0",
     "socket.io": "^4.1.2",
