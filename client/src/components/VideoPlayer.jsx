@@ -58,7 +58,7 @@ const VideoPlayer = () => {
       myMicStatus,
       updateMic,
       shareScreen,
-      myScreen } = useContext(SocketContext);
+      myScreen, uname, } = useContext(SocketContext);
     const classes = useStyles();
     const toggleFullScreen = () => {
       if(!callAccepted)
@@ -93,7 +93,7 @@ const VideoPlayer = () => {
                       <Paper className={classes.paper}>
                       <Grid item xs={12} md={6}>
                       {console.log(call.name)}
-                          <Typography variant="h4" background_color="red" gutterBottom>{call.name || 'Caller Name'}</Typography>
+                          <Typography variant="h4" background_color="red" gutterBottom>{call.name || uname || 'Caller Name'}</Typography>
                           <video playsInline id="usVideo" ref={userVideo} autoPlay className={classes.video} />
                       </Grid>
                       </Paper>

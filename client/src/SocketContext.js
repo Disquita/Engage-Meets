@@ -4,8 +4,8 @@ import Peer from 'simple-peer';
 
 const SocketContext = createContext();
 
-//const socket = io('http://localhost:5000');
-const socket = io('https://engage-meets.herokuapp.com/');
+const socket = io('http://localhost:5000');
+//const socket = io('https://engage-meets.herokuapp.com/');
 
 const ContextProvider = ({ children }) => {
 
@@ -22,6 +22,7 @@ const ContextProvider = ({ children }) => {
     const [myScreen, setMyScreen] = useState(true);
     const [chat, setChat] = useState([]);
     const [msgRcv, setMsgRcv] = useState("");
+    const [uname, setUname] = useState("");
     var ss;
     const myVideo = useRef();
     const userVideo = useRef();
@@ -71,7 +72,7 @@ const ContextProvider = ({ children }) => {
           const peer = new Peer({ initiator: false, trickle: false, stream });
 
           peer.on('signal', (data) => {
-          socket.emit('answerCall', { signal : data, to: call.from , name, type: "both", myMediaStatus: [myMicStatus, myVdoStatus]});
+          socket.emit('answerCall', { signal : data, to: call.from , uname: name, type: "both", myMediaStatus: [myMicStatus, myVdoStatus]});
         });
 
           peer.on('stream', (currentStream) => {
@@ -94,8 +95,9 @@ const ContextProvider = ({ children }) => {
         userVideo.current.srcObject= currentStream;
       });
 
-      socket.on('callAccepted', (signal) => {
+      socket.on('callAccepted', ({signal, uname}) => {
           setCallAccepted(true);
+          setUname(uname);
           peer.signal(signal);
           socket.emit("updateMyMedia", {
             type: "both",
@@ -197,6 +199,7 @@ const ContextProvider = ({ children }) => {
         chat,
         setChat,
         setMsgRcv,
+        uname,
       }}>
         {children}
       </SocketContext.Provider>
