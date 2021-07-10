@@ -54,20 +54,23 @@ const useStyles = makeStyles((theme) => ({
       padding: '10px 20px',
       border: '2px solid black',
     },
-   }));
+}));
 
 const Options = ( {children} ) => {
     const { me, callAccepted, name, setName, callEnded, leaveCall, callUser, calling } = useContext(SocketContext);
     const [idToCall, setIdToCall] = useState('');
     const classes = useStyles();
     const [isCopied, setIsCopied] = useState(false);
-    const link="http://localhost:3000/";
+    const link="https://engage-meets.netlify.app/";
+
+    /* Code copy status */
     const onCopyText = () => {
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);
       }, 1000);
     };
+
     return (
         <Container className={classes.container}>
             <Paper elevation={10} className={classes.paper}>
@@ -75,7 +78,11 @@ const Options = ( {children} ) => {
                 <Grid container className={classes.gridContainer}>
                     <Grid item xs={12} md={6} className={classes.padding}>
                         <Typography gutterBottom variant="h6">Meet Info</Typography>
+
+                        {/* User's name entered */}
                         <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
+
+                        {/* Meet id generated */}
                         <CopyToClipboard text={me} onCopy={onCopyText} className={classes.margin}>
                           <div>
                             <Button variant="contained" color="primary" fullWidth startIcon={<Assignment fontSize="large" />}>
@@ -85,6 +92,8 @@ const Options = ( {children} ) => {
                           </div>  
                         </CopyToClipboard>
                     </Grid>
+
+                    {/* Call and endcall controls */}
                     <Grid item xs={12} md={6} className={classes.padding}>
                         <Typography gutterBottom variant="h6">Join a Meet</Typography>
                         <TextField label="Meet ID" value={idToCall} onChange={(e) => setIdToCall(e.target.value)} fullWidth />
@@ -115,24 +124,26 @@ const Options = ( {children} ) => {
                 </Grid>    
                 </form>
                 {children}
+
+                {/* Sharing ID on social media */}
                 <div className={classes.shares}>
                   <EmailShareButton
                       url={link}
-                      title={"Join my Call with code: " + String(me) +"\nLink: "}
+                      body={"Join my Call with code: " + String(me) +"\nLink: "}
                     >
                       <EmailIcon size={32} round={true} />
                   </EmailShareButton>
                   
                   <FacebookShareButton
                       url={link}
-                      title={"Join my Call with code: " + String(me) +"\nLink: "}
+                      quote={"Join my Call with code: " + String(me) +"\nLink: "}
                     >
                       <FacebookIcon size={32} round={true} />
                   </FacebookShareButton>
                   
                   <LinkedinShareButton
                       url={link}
-                      title={"Join my Call with code: " + String(me) +"\nLink: "}
+                      summary={"Join my Call with code: " + String(me) +"\nLink: "}
                     >
                       <LinkedinIcon size={32} round={true} />
                   </LinkedinShareButton>

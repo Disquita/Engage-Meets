@@ -1,11 +1,14 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import Modal from 'simple-react-modal';
 import ChatIcon from '@material-ui/icons/Chat';
 import CancelIcon from '@material-ui/icons/Cancel';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import { SocketContext } from '../SocketContext';
 import { makeStyles } from '@material-ui/core/styles';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import chatlogo from '../assets/chatlogo.png';
 import './Chat.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -72,87 +75,132 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Chat = () => {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const classes = useStyles();
-    const { name, sendMsg: sendMsgFunc,
-      msgRcv,
-      chat,
-      setChat, } = useContext(SocketContext);
-      const [sendMsg, setSendMsg] = useState("");
+      const [show, setShow] = useState(false);
+      const handleClose = () => setShow(false);
+      const handleShow = () => setShow(true);
+      const classes = useStyles();
+      const { sendMsg, chat, } = useContext(SocketContext);
+      const [curMsg, setCurMsg] = useState("");
+      const [downloadLink, setDownloadLink] = useState('');
+      const [showLink, setShowLink] = useState(false);
+      const newchat = useRef();
 
-      const dummy = useRef();
-
+      /*Displaying latest chat */
       useEffect(() => {
-        if (dummy?.current) dummy.current.scrollIntoView({ behavior: "smooth" });
+        if (newchat?.current) newchat.current.scrollIntoView({ behavior: "smooth" });
       }, [chat]);
 
-      const onSearch = (value) => {
-        if (sendMsg && sendMsg.length) sendMsgFunc(sendMsg);
-        setSendMsg("");
+      /*Handling enter*/
+      const onEnter = (event) => {
+        event.preventDefault();
+        onSend();
       };
 
-    
+      /*Sending message */
+      const onSend = () => {
+        if (curMsg && curMsg.length) sendMsg(curMsg);
+        setCurMsg("");
+      };
+
+      /*Creating downloadable chat log file */
+
+      const makeTextFile = () => {
+        const log=JSON.stringify(chat, null, 2);
+        const data = new Blob([log], { type: 'text/plain' });
+        if (downloadLink !== '') window.URL.revokeObjectURL(downloadLink);
+        setDownloadLink(window.URL.createObjectURL(data));
+      };
+
+      const getLink = () => {
+        makeTextFile();
+        setShowLink(true);
+        setTimeout(() => {
+          setShowLink(false);
+        }, 10000);
+      };
+
+      useEffect(() => {
+        makeTextFile();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+
   return (
     <>
-      <Button variant="contained" color="primary" startIcon={<ChatIcon />} onClick={handleShow}>Chat</Button>
+    {/*Chat box expands on click */}
+      <ButtonGroup class="btn-toolbar" variant="contained">
+        <Button variant="contained" color="secondary" size="lg" startIcon={<ChatIcon />} onClick={handleShow}>Chat</Button>
+        <Button variant="contained" color="secondary" size="lg" startIcon={<GetAppIcon />} onClick={getLink}>Chat Log</Button>
+      </ButtonGroup>
+
+            {/*Link to download chat log */}
+            {showLink?<a style={{color: "yellow", fontSize: "large"}} download="chatlog.txt" href={downloadLink}>Download Chat log</a>:null}
+
       <Modal
       closeOnOuterClick={true}
       show={show}
       onClose={handleClose}
       containerStyle={{height: 'auto', display: 'flex', borderRadius: '8px',}}>
+
       <div className={classes.container}>
-      <div className={classes.infoBar}>
-        <h2>CHAT</h2>
-      </div>
-      <ScrollToBottom>
-      {chat.length>0 ? (
-                 <div className={classes.mess}>
-                  {chat.map((msg) => (
-                    <div
-                      className={msg.type === "sent" ? classes.msg_sent : classes.msg_rcv}
-                    >
-                      {msg.type === "sent" ? (
-                        <div className="messageContainer justifyEnd">
-                          <p className="sentText pr-10">{msg.sender}</p>
-                          <div className="messageBox backgroundBlue">
-                            <p className="messageText colorWhite">{msg.msg}</p>
-                          </div>
-                        </div>
 
-                      ):(
-                        <div className="messageContainer justifyStart">
-                          <div className="messageBox backgroundLight">
-                            <p className="messageText colorDark">{msg.msg}</p>
-                          </div>
-                          <p className="sentText pl-10 ">{msg.sender}</p>
-                        </div>
+        <div className={classes.infoBar}>
+          <h2>CHAT</h2>
+        </div>
 
-                      )}
+      {/*Chat container */}
+          <ScrollToBottom>
+          {chat.length>0 ? (
+                    <div className={classes.mess}>
+                      {chat.map((msg) => (
+                        <div
+                          className={msg.type === "sent" ? classes.msg_sent : classes.msg_rcv}
+                        >
+                        {/*Sent and recieved messages */}
+                          {msg.type === "sent" ? (
+                            <div className="messageContainer justifyEnd">
+                              <p className="sentText pr-10">{msg.sender}</p>
+                              <div className="messageBox backgroundBlue">
+                                <p className="messageText colorWhite">{msg.msg}</p>
+                              </div>
+                            </div>
+                          ):(
+                            <div className="messageContainer justifyStart">
+                              <div className="messageBox backgroundLight">
+                                <p className="messageText colorDark">{msg.msg}</p>
+                              </div>
+                              <p className="sentText pl-10 ">{msg.sender}</p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+
+                      <div ref={newchat} style={{border:'none'}}></div>
                     </div>
-                  ))}
-                  <div ref={dummy} style={{border:'none'}}></div>
-                </div>
-              ) : (
-                <div>
-                  no message
-                </div>
-              )}
-      </ScrollToBottom>        
-      <form className={classes.form}>
-        <input
-          className={classes.input}
-          type="text"
-          placeholder="Type a message..."
-          value={sendMsg}
-          onChange={(e) => setSendMsg(e.target.value)}
-          onKeyDown={(event) => event.key === 'Enter' ? {onSearch} : null}
-        />
-        <Button variant="contained" color="primary" className={classes.sendButton} onClick={onSearch}>SEND</Button>
-      </form>
-      <Button variant="contained" color="primary" startIcon={<CancelIcon />} onClick={handleClose}>Close</Button>
-      </div>
+                  ) : (
+                    <div>
+                    {/*If chat is empty */}
+                      <img src={chatlogo} alt="" width="150" height="150"/>
+                      no messages
+                    </div>
+                  )}
+          </ScrollToBottom>  
+
+        {/*Chat Input */}      
+        <form className={classes.form}>
+          <input
+            className={classes.input}
+            type="text"
+            placeholder="Type a message..."
+            value={curMsg}
+            onChange={(e) => setCurMsg(e.target.value)}
+            onKeyPress={(event) => event.key === 'Enter' ? onEnter(event) : null}
+          />
+          <Button variant="contained" color="primary" className={classes.sendButton} onClick={onSend}>SEND</Button>
+        </form>
+
+            {/*Closing chat box */}
+            <Button variant="contained" color="primary" startIcon={<CancelIcon />} onClick={handleClose}>Close</Button>
+        </div>
       </Modal>
     </>
   );

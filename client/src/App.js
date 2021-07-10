@@ -23,7 +23,7 @@ const App = () => {
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>
-            <AppBar position="static" color="inherit" className={classes.appBar}>
+            <AppBar position="static" color="primary" className={classes.appBar}>
                 <Typography className={styles.bigheading} variant="h2" align="center">
                 👥
                 Engage Meetings

@@ -14,14 +14,14 @@ import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
 const useStyles = makeStyles((theme) => ({
 
-    root: {
+  root: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       '& > *': {
         margin: theme.spacing(1),
       },
-    },
+  },
 
   video: {
     width: '600px',
@@ -51,15 +51,26 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-
+/* Video call and related options rendering */
 const VideoPlayer = () => {
-    const { name, callAccepted, myVideo, userVideo, callEnded, stream, call, myVdoStatus,
-      updateVideo,
-      myMicStatus,
-      updateMic,
-      shareScreen,
-      myScreen, uname, } = useContext(SocketContext);
+    const { name, 
+      callAccepted, 
+      myVideo, 
+      userVideo, 
+      callEnded, 
+      stream, 
+      call, 
+      myCamStatus, 
+      updateVideo, 
+      myMicStatus, 
+      updateMic, 
+      shareScreen, 
+      myScreen, 
+      uname, } = useContext(SocketContext);
+
     const classes = useStyles();
+
+    /* Fullscreen function */
     const toggleFullScreen = () => {
       if(!callAccepted)
        return;
@@ -74,21 +85,26 @@ const VideoPlayer = () => {
         v.webkitRequestFullscreen();
       }
     };
+
     return (
       <div className={classes.root}>
-          <Grid container className={classes.gridContainer}>
+          <Grid container className={classes.gridContainer}> 
+
+          {/* Current user's video */}
           { stream &&(
                           <Paper className={classes.paper}>
                               <Grid item xs={5} md={3}>
                                   <Typography variant="h4" gutterBottom background_color="red">{name || 'My Name'}</Typography>
                                   <video playsInline muted ref={myVideo} autoPlay className={classes.video} 
                                     style={{
-                                      opacity: `${myVdoStatus ? "1" : "0"}`,
+                                      opacity: `${myCamStatus ? "1" : "0"}`,
                                     }}
                                   />
                               </Grid>
                           </Paper>
           )}
+          
+          {/* Other user's video */}
           {callAccepted && !callEnded && (
                       <Paper className={classes.paper}>
                       <Grid item xs={12} md={6}>
@@ -99,10 +115,11 @@ const VideoPlayer = () => {
                       </Paper>
           )}
           
+          {/* Options List */}
           </Grid>
             <ButtonGroup class="btn-toolbar" variant="contained" color="primary" aria-label="contained primary button group" className={classes.buttons}>
               <Button startIcon={myMicStatus ?<MicIcon />:<MicOffIcon />} onClick={() => updateMic()}>{myMicStatus ?<span>Mute</span>:<span>Unmute</span>}</Button>
-              <Button startIcon={myVdoStatus ?<VideocamIcon />:<VideocamOffIcon />} onClick={() => updateVideo()}>{myVdoStatus ?<span>Turn off Video</span>:<span>Turn on Video</span>}</Button>
+              <Button startIcon={myCamStatus ?<VideocamIcon />:<VideocamOffIcon />} onClick={() => updateVideo()}>{myCamStatus ?<span>Turn off Video</span>:<span>Turn on Video</span>}</Button>
               <Button startIcon={myScreen ?<ScreenShareIcon />:<StopScreenShareIcon />} onClick={() => shareScreen()}>{myScreen ?<span>Share Screen</span>:<span>Stop Sharing Screen</span>}</Button>
               <Button startIcon={<FullscreenIcon />} onClick={() => toggleFullScreen()}>Fullscreen</Button>
             </ButtonGroup>

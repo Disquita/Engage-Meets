@@ -14,7 +14,7 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 app.get('/',(req, res) =>{
-    res.send('Server is running.');
+    res.send('Server is up and running.');
 });
 
 io.on("connection", (socket) => {
@@ -32,8 +32,8 @@ io.on("connection", (socket) => {
         io.to(data.to).emit("callAccepted", data)
     });
 
-    socket.on("msgUser", ({ name, to, msg, sender }) => {
-        io.to(to).emit("msgRcv", { name, msg, sender });
+    socket.on("messageUser", ({ name, to, msg, sender }) => {
+        io.to(to).emit("recieveMsg", { name, msg, sender });
       });
     
 });

@@ -2,9 +2,12 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Button } from '@material-ui/core';
 import { SocketContext } from '../SocketContext';
 import ringtone from '../assets/ringtone.mp3'
+/* Call notification */
 
 const Notifications = () => {
     const { answerCall, call, callAccepted } = useContext(SocketContext);
+
+    /* Call ringtone */
     const [audio] = useState( typeof Audio !== "undefined" && new Audio(ringtone));
     const [isPlaying, setIsPlaying] = useState(false);
     useEffect(() => {
@@ -14,26 +17,27 @@ const Notifications = () => {
     );
     const handleCancel = () => {
         window.location.reload();
-      };
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         if (call.isReceivingCall && !callAccepted) {
           setIsPlaying(true);
         } else setIsPlaying(false);
-      }, [call.isReceivingCall, callAccepted]);
+    }, [call.isReceivingCall, callAccepted]);
 
     return (
         <>
             {call.isReceivingCall && !callAccepted && (
                 <>
-                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <h1>{call.name} is calling: </h1>
-                <Button variant="contained" color="primary" onClick={answerCall}>
-                    Answer
-                </Button>
-                <Button variant="contained" color="primary" onClick={handleCancel}>
-                    Reject
-                </Button>
-                </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <h1>{call.name} is calling: </h1>
+                      <Button variant="contained" color="primary" onClick={answerCall}>
+                          Answer
+                      </Button>
+                      <Button variant="contained" color="primary" onClick={handleCancel}>
+                          Reject
+                      </Button>
+                  </div>
                 </>
             )}
         </>

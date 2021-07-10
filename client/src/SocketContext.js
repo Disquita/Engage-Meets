@@ -4,6 +4,7 @@ import Peer from 'simple-peer';
 
 const SocketContext = createContext();
 
+/* Server side connection */
 const socket = io('http://localhost:5000');
 //const socket = io('https://engage-meets.herokuapp.com/');
 
@@ -15,13 +16,12 @@ const ContextProvider = ({ children }) => {
     const [callAccepted, setCallAccepted] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState('');
-    const [myVdoStatus, setMyVdoStatus] = useState(true);
-    const [userVdoStatus, setUserVdoStatus] = useState();
+    const [myCamStatus, setmyCamStatus] = useState(true);
+    const [userCamStatus, setuserCamStatus] = useState();
     const [myMicStatus, setMyMicStatus] = useState(true);
     const [userMicStatus, setUserMicStatus] = useState();
     const [myScreen, setMyScreen] = useState(true);
     const [otherUser, setOtherUser] = useState("");
-    const [msgRcv, setMsgRcv] = useState("");
   	const [chat, setChat ] = useState([]);
     const [uname, setUname] = useState("");
     const [calling, setCalling] = useState(false);
@@ -47,20 +47,20 @@ const ContextProvider = ({ children }) => {
         if (currentMediaStatus !== null || currentMediaStatus !== []) {
           switch (type) {
             case "video":
-              setUserVdoStatus(currentMediaStatus);
+              setuserCamStatus(currentMediaStatus);
               break;
             case "mic":
               setUserMicStatus(currentMediaStatus);
               break;
             default:
               setUserMicStatus(currentMediaStatus[0]);
-              setUserVdoStatus(currentMediaStatus[1]);
+              setuserCamStatus(currentMediaStatus[1]);
               break;
           }
         }
       });
 
-      socket.on("msgRcv", ({ name, msg: value, sender }) => {
+      socket.on("recieveMsg", ({ name, msg: value, sender }) => {
         let msg = {};
         msg.msg = value;
         msg.type = "rcv";
@@ -70,14 +70,16 @@ const ContextProvider = ({ children }) => {
       });
 
 
-}, []);
+  }, []);
 
+
+  /* Function to answer and join call */
   const answerCall = () => {
           setCallAccepted(true);
           const peer = new Peer({ initiator: false, trickle: false, stream });
           setOtherUser(call.from);
           peer.on('signal', (data) => {
-          socket.emit('answerCall', { signal : data, to: call.from , uname: name, type: "both", myMediaStatus: [myMicStatus, myVdoStatus]});
+          socket.emit('answerCall', { signal : data, to: call.from , uname: name, type: "both", myMediaStatus: [myMicStatus, myCamStatus]});
         });
 
           peer.on('stream', (currentStream) => {
@@ -89,6 +91,8 @@ const ContextProvider = ({ children }) => {
 
   };
 
+
+  /* Function to call user */
   const callUser = (id) => {
     const peer = new Peer({ initiator: true, trickle: false, stream });
       setCalling(true);
@@ -107,14 +111,15 @@ const ContextProvider = ({ children }) => {
           peer.signal(signal);
           socket.emit("updateMyMedia", {
             type: "both",
-            currentMediaStatus: [myMicStatus, myVdoStatus],
+            currentMediaStatus: [myMicStatus, myCamStatus],
           });
       });
       connectionRef.current = peer;
   };
 
+  /* Function managing change in camera status */
   const updateVideo = () => {
-    setMyVdoStatus((currentStatus) => {
+    setmyCamStatus((currentStatus) => {
       socket.emit("updateMyMedia", {
         type: "video",
         currentMediaStatus: !currentStatus,
@@ -123,6 +128,8 @@ const ContextProvider = ({ children }) => {
       return !currentStatus;
     });
   };
+
+  /* Function managing change in microphone status */
   const updateMic = () => {
     setMyMicStatus((currentStatus) => {
       socket.emit("updateMyMedia", {
@@ -134,6 +141,8 @@ const ContextProvider = ({ children }) => {
     });
   };
 
+
+  /* Function managing screen sharing */
   const shareScreen = () => {
     if(myScreen){
       navigator.mediaDevices.getDisplayMedia({cursor:true})
@@ -160,8 +169,9 @@ const ContextProvider = ({ children }) => {
     }
   };
 
+  /* Function managing chat */
   const sendMsg = (value) => {
-    socket.emit("msgUser", { name, to: otherUser, msg: value, sender: name });
+    socket.emit("messageUser", { name, to: otherUser, msg: value, sender: name });
     let msg = {};
     msg.msg = value;
     msg.type = "sent";
@@ -170,6 +180,7 @@ const ContextProvider = ({ children }) => {
     setChat([...chat, msg]);
   };
 
+  /* Function managing call termination */
   const leaveCall = () => {
       setCallEnded(true);
       connectionRef.current.destroy();
@@ -190,10 +201,10 @@ const ContextProvider = ({ children }) => {
         callUser,
         leaveCall,
         answerCall,
-        myVdoStatus,
-        setMyVdoStatus,
-        userVdoStatus,
-        setUserVdoStatus,
+        myCamStatus,
+        setmyCamStatus,
+        userCamStatus,
+        setuserCamStatus,
         updateVideo,
         myMicStatus,
         userMicStatus,
@@ -203,10 +214,8 @@ const ContextProvider = ({ children }) => {
         uname,
         calling,
         sendMsg,
-        msgRcv,
         chat,
         setChat,
-        setMsgRcv,
         setOtherUser,
       }}>
         {children}
