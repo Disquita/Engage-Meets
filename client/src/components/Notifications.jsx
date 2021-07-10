@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button } from '@material-ui/core';
 import { SocketContext } from '../SocketContext';
-import ringtone from '../media/ringtone.mp3'
+import ringtone from '../assets/ringtone.mp3'
 
 const Notifications = () => {
     const { answerCall, call, callAccepted } = useContext(SocketContext);

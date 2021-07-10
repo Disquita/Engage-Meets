@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
         io.to(data.to).emit("callAccepted", data)
     });
 
-    socket.on("messagegUser", ({ name, to, msg, sender }) => {
+    socket.on("msgUser", ({ name, to, msg, sender }) => {
         io.to(to).emit("msgRcv", { name, msg, sender });
       });
     

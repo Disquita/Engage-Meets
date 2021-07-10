@@ -20,8 +20,9 @@ const ContextProvider = ({ children }) => {
     const [myMicStatus, setMyMicStatus] = useState(true);
     const [userMicStatus, setUserMicStatus] = useState();
     const [myScreen, setMyScreen] = useState(true);
-    const [chat, setChat] = useState([]);
+    const [otherUser, setOtherUser] = useState("");
     const [msgRcv, setMsgRcv] = useState("");
+  	const [chat, setChat ] = useState([]);
     const [uname, setUname] = useState("");
     const [calling, setCalling] = useState(false);
     var ss;
@@ -60,18 +61,21 @@ const ContextProvider = ({ children }) => {
       });
 
       socket.on("msgRcv", ({ name, msg: value, sender }) => {
-        setMsgRcv({ value, sender });
-        setTimeout(() => {
-          setMsgRcv({});
-        }, 2000);
+        let msg = {};
+        msg.msg = value;
+        msg.type = "rcv";
+        msg.sender = sender;
+        msg.timestamp = Date.now();
+        setChat(chat => [...chat, msg]);
       });
+
 
 }, []);
 
   const answerCall = () => {
           setCallAccepted(true);
           const peer = new Peer({ initiator: false, trickle: false, stream });
-
+          setOtherUser(call.from);
           peer.on('signal', (data) => {
           socket.emit('answerCall', { signal : data, to: call.from , uname: name, type: "both", myMediaStatus: [myMicStatus, myVdoStatus]});
         });
@@ -91,7 +95,7 @@ const ContextProvider = ({ children }) => {
       peer.on('signal', (data) => {
         socket.emit('callUser', { userToCall: id, signalData : data, from: me, name });
       });
-
+      setOtherUser(id);
       peer.on('stream', (currentStream) => {
         userVideo.current.srcObject= currentStream;
       });
@@ -157,7 +161,7 @@ const ContextProvider = ({ children }) => {
   };
 
   const sendMsg = (value) => {
-    socket.emit("messageUser", { name, to: call.from, msg: value, sender: name });
+    socket.emit("msgUser", { name, to: otherUser, msg: value, sender: name });
     let msg = {};
     msg.msg = value;
     msg.type = "sent";
@@ -196,13 +200,14 @@ const ContextProvider = ({ children }) => {
         updateMic,
         shareScreen,
         myScreen,
+        uname,
+        calling,
         sendMsg,
         msgRcv,
         chat,
         setChat,
         setMsgRcv,
-        uname,
-        calling,
+        setOtherUser,
       }}>
         {children}
       </SocketContext.Provider>
