@@ -5,8 +5,8 @@ import Peer from 'simple-peer';
 const SocketContext = createContext();
 
 /* Server side connection */
-const socket = io('http://localhost:5000');
-//const socket = io('https://engage-meets.herokuapp.com/');
+//const socket = io('http://localhost:5000');
+const socket = io('https://engage-meets.herokuapp.com/');
 
 const ContextProvider = ({ children }) => {
 
