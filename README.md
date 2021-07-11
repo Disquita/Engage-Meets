@@ -20,5 +20,7 @@
  6. Screen Sharing
  7. Fullscreen option
  8. Directly Share ID and link through social media
+ 9. Communicate through chat messages during the meet
+ 10. Download the chat log for future references
  
  
