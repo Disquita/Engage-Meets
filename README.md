@@ -22,6 +22,19 @@
  9. Directly Share ID and link through social media 📧
  10. Communicate through chat messages during the meet 💬
  11. Download the chat log for future references 📨
+ 
+ ## Tech Stack Used
+ 
+ 1. NodeJs
+ 2. ReactJS
+ 3. WebRTC
+ 4. Socket.io
+ 
+ ### Deployment
+ 
+  Server Side : Heroku
+  Client Side : Netlify
+ 
 
  ## Video Demo 📽️
  
