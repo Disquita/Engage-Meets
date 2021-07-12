@@ -43,13 +43,16 @@
  
  ![screenshot](Screenshots/avatar.png)
  
+ 
  ### Agile Methodology
  
  ![screenshot](Screenshots/agile.png)
  
+ 
  ### Early Sprints Version
  
  ![screenshot](Screenshots/screenshot1.png)
+ 
  
  ### Video Controls
  
@@ -57,11 +60,13 @@
  
  ![screenshot](Screenshots/Capture.PNG)
  
+ 
  ### Making a call and joining the meet
  
  ![screenshot](Screenshots/notification.png)
  
  ![screenshot](Screenshots/share.png)
+ 
  
   ### Adopt Chat Feature
  
