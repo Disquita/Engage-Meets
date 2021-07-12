@@ -18,9 +18,10 @@
  5. Camera disable/enable 📹
  6. Screen Sharing 💻
  7. Fullscreen option 🔎
- 8. Directly Share ID and link through social media 📧
- 9. Communicate through chat messages during the meet 💬
- 10. Download the chat log for future references 📨
+ 8. Responsive and cross-platform UI/UX 📱
+ 9. Directly Share ID and link through social media 📧
+ 10. Communicate through chat messages during the meet 💬
+ 11. Download the chat log for future references 📨
 
  ## Video Demo 📽️
  
