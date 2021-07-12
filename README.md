@@ -32,7 +32,7 @@
  
  ### Deployment
  
-  Server Side : Heroku
+  Server Side : Heroku;
   Client Side : Netlify
  
 
